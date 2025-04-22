@@ -63,7 +63,6 @@ class BaB(QDialog):
         button_layout.setAlignment(Qt.AlignLeft)
         npo_button = QPushButton("NPO")
         cts_button = QPushButton("CTS")
-        pivot_button = QPushButton("CPD")
         pivot_button.setFixedSize(80, 30)
         button_layout.addWidget(npo_button)
         button_layout.addWidget(cts_button)
@@ -122,29 +121,7 @@ class BaB(QDialog):
         create_cst_button.clicked.connect(self.createCst)
         layout.addWidget(create_cst_button)
 
-    # Fonction pour créer un pivot dynamique
-    def createDynamicPivot(self):
-        sel = cmds.ls(selection=True)
-        if not sel:
-            cmds.warning("Aucun objet sélectionné. Veuillez sélectionner un objet.")
-            return
     
-        for obj in sel:
-            # Créer un nœud pivot, mais avec un attribut de transformation qui ne modifie pas l'objet
-            pivot_node = cmds.createNode("transform", name=f"{obj}_pivot")
-            
-            # Positionner le pivot à la même position que l'objet sans modifier l'objet
-            cmds.matchTransform(pivot_node, obj, pos=True, rot=True)
-            
-            # Créer un groupe pour gérer la transformation de l'objet sans changer sa position
-            obj_group = cmds.group(obj, name=f"{obj}_group")
-            cmds.matchTransform(obj_group, obj, pos=True, rot=True)  # Garder la position et rotation initiale
-            
-            # Parent l'objet au groupe, et le groupe au pivot
-            cmds.parent(obj_group, pivot_node)
-    
-            # Le groupe permettra à l'objet de se déplacer librement sans affecter son pivot
-            print(f"Pivot dynamique créé pour {obj}, vous pouvez maintenant déplacer le pivot sans affecter l'objet.")
 
     # Fonction pour créer une contrainte
     def createCst(self):
